@@ -24,7 +24,6 @@ class Board
     @possible_values = []
     @row = []
     @column = []
-
     gen_board
   end
 
@@ -55,10 +54,22 @@ class Board
 
 #get all the values from a master cell
   def get_master_cell(initial_cell)
-    case initial_cell
-    when :A0
-      get_row
+    starting_point = initial_cell.to_sym
+    master_cell = { }
+    letter = initial_cell[0]
+    number = initial_cell[1]
+    a_symbol = nil
 
+    3.times do
+        3.times do
+          a_symbol = ( letter + number ).to_sym
+          master_cell.merge!( { a_symbol => @board[ a_symbol ] } )
+          number.next!
+        end
+        letter.next!
+        number = initial_cell[1]
+      end
+      return master_cell
   end
 
   def get_value(key)
@@ -97,6 +108,7 @@ board_array = "1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---3-43
 
 trial = Board.new(board_array)
 #  p trial.gen_board
-p trial.get_row("A")
-p trial.get_column(2)
+#p trial.get_row("A")
+#p trial.get_column(2)
 # p trial.get_value("G3")
+p trial.get_master_cell("D6")
