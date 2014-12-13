@@ -5,12 +5,6 @@
 
   end
 
-  def solve
-  end
-
-  def board
-  end
-
   # Returns a string representing the current state of the board
   def to_s
   end
@@ -26,6 +20,29 @@ class Board
     @column = []
     gen_board
   end
+
+  def print_board
+    board_array = []
+
+    @board.each_value { |value| board_array << value }
+    print "+-------------------+"
+    puts
+    board_array.each_slice(9) do |row|
+
+      print "| " + row.join(" ").gsub(/["0"]/, '_') + " |"
+      puts
+    end
+    print "+-------------------+"
+    puts
+  end
+
+  def solve
+    @board.each do |key, value|
+      get_value(key)
+      get_column(key)
+  end
+end
+
 
 #gen board needs to create a hash with key represented as column (A)/row (0) intersections ("A0") and values as board_array (1..9 or -)
   def gen_board
@@ -53,15 +70,15 @@ class Board
   end
 
 #get all the values from a master cell
-  def get_master_cell(initial_cell)
+  def get_master_cell(initial_cell, amount = 3)
     starting_point = initial_cell.to_sym
     master_cell = { }
     letter = initial_cell[0]
     number = initial_cell[1]
     a_symbol = nil
 
-    3.times do
-        3.times do
+    amount.times do
+        amount.times do
           a_symbol = ( letter + number ).to_sym
           master_cell.merge!( { a_symbol => @board[ a_symbol ] } )
           number.next!
@@ -76,6 +93,9 @@ class Board
     @board[key.to_sym]
   end
 
+  def set_value(key, value)
+    @board[key.to_sym] = value
+  end
 
 
 end
@@ -111,4 +131,5 @@ trial = Board.new(board_array)
 #p trial.get_row("A")
 #p trial.get_column(2)
 # p trial.get_value("G3")
-p trial.get_master_cell("D6")
+#p trial.get_master_cell("D6")
+trial.print_board
