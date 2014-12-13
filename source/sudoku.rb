@@ -1,6 +1,5 @@
 
   class Sudoku
-
   def initialize(board_array)
 
   end
@@ -11,13 +10,13 @@
 end
 
 class Board
+  attr_reader :board
 
   def initialize(board_string)
     @board_array = board_string.chars
     @board = {}
-    @possible_values = []
-    @row = []
-    @column = []
+    @possible_values = [1,2,3,4,5,6,7,8,9]
+
     gen_board
   end
 
@@ -55,19 +54,6 @@ end
 #get all the values from a row, each puts every 9 keys from board_array
 #get all values from a column, each puts keys with (column)"index" from board_array
 
-  def get_row(column_label)
-    (0..8).each do |row_label|
-      @row << get_value( column_label + row_label.to_s )
-    end
-    return @row
-  end
-
-  def get_column(row_label)
-    ("A".."I").each do |column_label|
-      @column << get_value( column_label + row_label.to_s )
-    end
-    return @column
-  end
 
 #get all the values from a master cell
   def get_master_cell(initial_cell, amount = 3)
@@ -97,6 +83,30 @@ end
     @board[key.to_sym] = value
   end
 
+  def filter_row(key)
+    column_label = key[0]
+    row = get_row(column_label)
+
+    return @possible_values.select{ |value| not row.include?(value) }
+  end
+
+  def get_row(column_label)
+    row = []
+
+    (0..8).each do |row_label|
+      row << get_value( column_label + row_label.to_s )
+    end
+    return row
+  end
+
+  def get_column(row_label)
+    column = []
+
+    ("A".."I").each do |column_label|
+      column << get_value( column_label + row_label.to_s )
+    end
+    return column
+  end
 
 end
 
