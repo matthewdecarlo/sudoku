@@ -1,5 +1,3 @@
-require_relative "master_cell_logic"
-
 class Board
   attr_reader :board
 
@@ -46,11 +44,34 @@ end
     return @board
   end
 
-#get all the values from a row, each puts every 9 keys from board_array
-#get all values from a column, each puts keys with (column)"index" from board_array
+    def get_master_cell(initial_cell)
 
+    starting_point = initial_cell.to_sym
+    master_cell = { }
+    letter = initial_cell[0]
+    number = initial_cell[1]
+    a_symbol = nil
 
-#get all the values from a master cell
+    3.times do
+        3.times do
+          a_symbol = ( letter + number ).to_sym
+          master_cell.merge!( { a_symbol => @board[ a_symbol ] } )
+          number.next!
+        end
+        letter.next!
+        number = initial_cell[1]
+      end
+      return master_cell
+  end
+
+  def gen_master_cell_list
+    initial_cell = ["A0", "A3", "A6", "D0", "D3", "D6", "G0", "G3", "G6"]
+
+    initial_cell.each do |cell|
+      @master_cell_list.merge!({cell.to_sym => get_master_cell(cell)})
+    end
+    return @master_cell_list
+  end
 
   def get_value(key)
     @board[key.to_sym]
@@ -98,6 +119,30 @@ end
     return column
   end
 
+#returns a hash that represents the master cell the cell_to_match is in
+  def find_master(cell_to_match)
+    @master_cell_list.each do | cell, value|
+       value.each_key do |key|
+           return value if key == cell_to_match.to_sym
+       end
+    end
+  end
+
+
+  def filter_master_cell(key)
+    master_cell = find_master(key)
+    master_values = []
+    master_cell.each_value do |value|
+      master_values << value
+    end
+    #compare @possible_values with the values in that master_cell
+    return @possible_values.select{ |value| not master_values.include?(value) }
+  end
+
+  def grand_filter(key)
+    ( filter_row(key) & filter_column(key) ) & filter_master_cell(key)
+  end
+
 end
 
 
@@ -123,6 +168,8 @@ end
 # [1,2,3,4, -, 9, 8] =
 
 
+
+
 #TESTS
 board = Board.new("1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---3-43--2-5-16--3-89--")
 #  p trial.gen_board
@@ -131,6 +178,9 @@ board = Board.new("1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---
 # p trial.get_value("G3")
 #p trial.get_master_cell("D6")
 board.print_board
-p board.gen_master_cell_list
-p board.in_master?("")
+board.gen_master_cell_list
+# p board.find_master("A4")
+# p board.filter_master_cell("A4")
+p board.grand_filter("A1")
+
 
