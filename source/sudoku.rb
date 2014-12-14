@@ -1,23 +1,12 @@
-
-  class Sudoku
-
-  def initialize(board_array)
-
-  end
-
-  # Returns a string representing the current state of the board
-  def to_s
-  end
-end
-
 class Board
 
   def initialize(board_string)
     @board_array = board_string.chars
     @board = {}
-    @possible_values = []
+    @possible_values = [1,2,3,4,5,6,7,8,9]
     @row = []
     @column = []
+
     gen_board
   end
 
@@ -46,6 +35,7 @@ end
 
 #gen board needs to create a hash with key represented as column (A)/row (0) intersections ("A0") and values as board_array (1..9 or -)
   def gen_board
+
     ("A".."I").each do |row|
       (0..8).each_with_index { |column, value| @board.merge!( { "#{row}#{column}".to_sym => @board_array.shift.to_i } ) }
     end
@@ -54,7 +44,6 @@ end
 
 #get all the values from a row, each puts every 9 keys from board_array
 #get all values from a column, each puts keys with (column)"index" from board_array
-
   def get_row(column_label)
     (0..8).each do |row_label|
       @row << get_value( column_label + row_label.to_s )
@@ -70,15 +59,16 @@ end
   end
 
 #get all the values from a master cell
-  def get_master_cell(initial_cell, amount = 3)
+  def get_master_cell(initial_cell)
     starting_point = initial_cell.to_sym
     master_cell = { }
     letter = initial_cell[0]
     number = initial_cell[1]
     a_symbol = nil
-
-    amount.times do
-        amount.times do
+    
+    
+    3.times do
+        3.times do
           a_symbol = ( letter + number ).to_sym
           master_cell.merge!( { a_symbol => @board[ a_symbol ] } )
           number.next!
@@ -131,5 +121,6 @@ trial = Board.new(board_array)
 #p trial.get_row("A")
 #p trial.get_column(2)
 # p trial.get_value("G3")
-#p trial.get_master_cell("D6")
-trial.print_board
+p trial.get_master_cell("D6")
+# trial.print_board
+p 
