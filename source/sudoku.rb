@@ -121,6 +121,6 @@ trial = Board.new(board_array)
 #p trial.get_row("A")
 #p trial.get_column(2)
 # p trial.get_value("G3")
-p trial.get_master_cell("D6")
-# trial.print_board
+# p trial.get_master_cell("D6")
+trial.print_board
 p 
